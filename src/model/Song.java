@@ -48,9 +48,17 @@ public class Song {
 		//increments timesPlayed and changes the lastPlayed date to now;
 		//does no checking on whether you can play the song
 		public void playSong() {
-			if(lastPlayed.compareTo(LocalDate.now()) < 0)
+			if(lastPlayed.isBefore(LocalDate.now()))
 				timesPlayed = 0;
 			lastPlayed = LocalDate.now();
+			timesPlayed++;
+		}
+		
+		//used to test to see if the change in date resets the timesPlayed
+		public void playSong(LocalDate date) {
+			if(date.isBefore(lastPlayed))
+				timesPlayed = 0;
+			lastPlayed = date;
 			timesPlayed++;
 		}
 	}

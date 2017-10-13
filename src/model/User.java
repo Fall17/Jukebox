@@ -14,7 +14,7 @@ public abstract class User {
 	public User(String username, String password) {
 		this.username = username; 
 		this.password = password;
-		timeLeft = 1500;
+		timeLeft = 1500*60; //each user starts with 1500 minutes 
 		lastPlayed = LocalDate.now().minusYears(20);
 		timesPlayed = 0;
 		
@@ -48,9 +48,24 @@ public abstract class User {
 		}
 	}
 	
-	//subtracts the song length from the timeLeft of the User
+	//when user plays a song this subtracts the time length of the song from the overall time the user has left
+	// updates timesPlayed today and lastPlayed
+	// provides no error checking
 	public void playSong(int time) {
 		timeLeft -= time;
+		if(lastPlayed.isBefore(LocalDate.now()))
+			timesPlayed = 0;
+		lastPlayed = LocalDate.now();
+		timesPlayed++;
+	}
+	
+	//used to test playSong if a change in date resets timesPlayed 
+	public void playSong(int time, LocalDate date) {
+		timeLeft -= time;
+		if(lastPlayed.isBefore(date))
+			timesPlayed = 0;
+		lastPlayed = date;
+		timesPlayed++;
 	}
 
 }

@@ -44,7 +44,7 @@ public class SongQueue {
 		if(!user.canPlaySong(curSong.getSongLength()))
 			return false;
 		//if the song has now been played today
-		if(curSong.getLastPlayed().compareTo(LocalDate.now()) < 0) {
+		if(curSong.getLastPlayed().isBefore(LocalDate.now())) {
 			return true;
 		}
 		else {
@@ -64,6 +64,7 @@ public class SongQueue {
 		
 		songQueue.add(curSong);
 		curSong.playSong();
+		user.playSong(curSong.getSongLength());
 		return true;
 	}
 	
