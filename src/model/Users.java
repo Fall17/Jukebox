@@ -3,6 +3,9 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+//This class handles the list of Users 
+// includes any login checks and add/removal of users
+
 public class Users {	
 	private List<User> userList;
 	public Users() {
@@ -36,6 +39,7 @@ public class Users {
 		for(User curUser : userList) {
 			if(curUser.getUsername().equals(username)) {
 				userList.remove(curUser);
+				return;
 			}
 		}
 	}

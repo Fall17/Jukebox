@@ -76,4 +76,30 @@ public class UserTest {
 		
 		
 	}
+	
+	@Test
+	public void testAddRemoveUsers() {
+		Users users = new Users();
+		assertTrue(users.logIn("Chris", "1") != null);
+		assertTrue(users.logIn("Devon", "22") != null);
+		assertTrue(users.logIn("River", "333") != null);
+		assertTrue(users.logIn("Ryan", "4444") != null);
+		assertTrue(users.logIn("Merlin", "7777777") != null);
+		
+		users.removeUser("Chris");
+		assertFalse(users.logIn("Chris", "1") != null);
+	
+
+		assertFalse(users.logIn("Jose", "55555") != null);
+		assertTrue(users.addUser("Jose", "55555"));
+		assertTrue(users.logIn("Jose", "55555") != null);
+		
+		assertFalse(users.addUser("Ryan", "2323"));
+		users.removeUser("Ryan");
+		assertFalse(users.logIn("Ryan", "4444") != null);
+		assertFalse(users.logIn("Ryan", "2323") != null);
+		assertTrue(users.addUser("Ryan", "2323"));
+		assertTrue(users.logIn("Ryan", "2323") != null);
+		
+	}
 }
