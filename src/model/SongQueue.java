@@ -22,7 +22,7 @@ public class SongQueue {
 		songs.add(new Song("songfiles/DanseMacabreViolinHook.mp3", "DanseMacabreViolinHook", 34, "Kevin MacLeod"));
 		songs.add(new Song("songfiles/DeterminedTumbao.mp3", "DeterminedTumbao", 20, "FreePlay Music"));
 		//songs.add(new Song("songfiles/LongingInTheirHeart.mp3", "LongingInTheirHeart"));
-		songs.add(new Song("songfiles/LoopingString.mp3", "LoopingString", 5, "Kevin MacLeod"));
+		songs.add(new Song("songfiles/LopingSting.mp3", "LopingSting", 5, "Kevin MacLeod"));
 		songs.add(new Song("songfiles/SwingCheese.mp3", "SwingCheese", 15, "FreePlay Music"));
 		songs.add(new Song("songfiles/TheCurtainRises.mp3", "TheCurtainRises", 28, "Kevin MacLeod"));
 		songs.add(new Song("songfiles/UntameableFire.mp3", "UntameableFire", 282, "Pierre Langer"));
