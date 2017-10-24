@@ -72,5 +72,10 @@ public class SongQueue {
 	public Song nextSong() {
 		return songQueue.remove();
 	}
+	
+	// returns the list of songs
+	public List<Song> getSongList() {
+		return songs;
+	}
 }
 

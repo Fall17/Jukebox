@@ -47,7 +47,7 @@ public class PlayAnMP3 extends Application {
 
     mediaPlayer.setOnEndOfMedia(new EndOfSongHandler());
 
-    Scene scene = new Scene(all, 600, 80);
+    Scene scene = new Scene(all, 300, 80);
     primaryStage.setScene(scene);
     primaryStage.show();
   }
