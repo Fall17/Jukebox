@@ -14,6 +14,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import javafx.scene.control.TableColumn;
+
 //Creates a FIFO queue of songs to be played
 //checks that each song is only played at most 3 times a day
 public class SongQueue implements Serializable {
@@ -122,6 +124,14 @@ public class SongQueue implements Serializable {
 		return songQueue.remove();
 	}
 
+	/**
+	 * returns the queue in array form
+	 */
+	public List<Song> getSongList(){
+		if(songQueue == null)
+			return new ArrayList<Song>();
+		return new ArrayList<Song>(songQueue);
+	}
 	//reads the song list and song queue from the save file
 	private void readInput() {
 		try {
