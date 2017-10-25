@@ -1,16 +1,16 @@
 package model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 // Added to allow package model to exist on GitHub
-public class Song {
+public class Song implements Serializable {
 		private LocalDate lastPlayed;
 		private int timesPlayed;
 	
 		private String path;
 		private String songName;
 		private int songLength; //in seconds
-		private String songLengthInMinutes;
 		private String artist;
 		
 		public Song(String path, String songName, int songLength, String artist) {
@@ -18,14 +18,6 @@ public class Song {
 			this.songName = songName;
 			this.songLength = songLength;
 			this.artist = artist;
-			int songMinutes = songLength/60;
-			int songSeconds = songLength%60;
-			if(songSeconds >= 10) {
-				songLengthInMinutes = "" + songMinutes + ":" + songSeconds;
-			}
-			else {
-				songLengthInMinutes = "" + songMinutes + ":0" + songSeconds;
-			}
 			lastPlayed = LocalDate.now().minusYears(20);
 			timesPlayed = 0;
 		}
@@ -38,6 +30,7 @@ public class Song {
 			return songName;
 		}
 		
+		
 		public LocalDate getLastPlayed() {
 			return lastPlayed;
 		}
@@ -48,10 +41,6 @@ public class Song {
 		
 		public int getSongLength() {
 			return songLength;
-		}
-		
-		public String getSongLengthInMinutes() {
-			return songLengthInMinutes;
 		}
 		
 		public String getArtist() {

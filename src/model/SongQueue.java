@@ -31,23 +31,32 @@ public class SongQueue implements Serializable {
 		try {
 			if(!userFile.createNewFile())
 				readInput();
-			else {
-				//songs contains the path to the song location
-				songs = new ArrayList<>();
-				songQueue = new LinkedList<Song>();
-				//add the songs into the arrayList
-				songs.add(new Song("songfiles/capture.mp3", "Capture", 5, "Pikachu"));
-				songs.add(new Song("songfiles/DanseMacabreViolinHook.mp3", "DanseMacabreViolinHook", 34, "Kevin MacLeod"));
-				songs.add(new Song("songfiles/DeterminedTumbao.mp3", "DeterminedTumbao", 20, "FreePlay Music"));
-				//songs.add(new Song("songfiles/LongingInTheirHeart.mp3", "LongingInTheirHeart"));
-				songs.add(new Song("songfiles/LopingSting.mp3", "LopingSting", 5, "Kevin MacLeod"));
-				songs.add(new Song("songfiles/SwingCheese.mp3", "SwingCheese", 15, "FreePlay Music"));
-				songs.add(new Song("songfiles/TheCurtainRises.mp3", "TheCurtainRises", 28, "Kevin MacLeod"));
-				songs.add(new Song("songfiles/UntameableFire.mp3", "UntameableFire", 282, "Pierre Langer"));
-			}
 		}catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		if(songs == null) {
+			createNewSongList();
+		}
+		if(songQueue == null)
+			songQueue = new LinkedList<Song>();
+	}
+
+	/**
+	 *  createNewSongList creates a new songQueue and a new songs array list. 
+	 *  It is called when the SongQueue save file is blank or when there was no SongQueue to begin with.
+	 */
+	private void createNewSongList() {
+		//set up the default list of songs to the list
+		songs = new ArrayList<>();
+		//add the songs into the arrayList
+		songs.add(new Song("songfiles/capture.mp3", "Capture", 5, "Pikachu"));
+		songs.add(new Song("songfiles/DanseMacabreViolinHook.mp3", "DanseMacabreViolinHook", 34, "Kevin MacLeod"));
+		songs.add(new Song("songfiles/DeterminedTumbao.mp3", "DeterminedTumbao", 20, "FreePlay Music"));
+		songs.add(new Song("songfiles/LopingSting.mp3", "LopingSting", 5, "Kevin MacLeod"));
+		songs.add(new Song("songfiles/SwingCheese.mp3", "SwingCheese", 15, "FreePlay Music"));
+		songs.add(new Song("songfiles/TheCurtainRises.mp3", "TheCurtainRises", 28, "Kevin MacLeod"));
+		songs.add(new Song("songfiles/UntameableFire.mp3", "UntameableFire", 282, "Pierre Langer"));		
 	}
 
 	//gets the SongPath for the given song name
@@ -128,9 +137,7 @@ public class SongQueue implements Serializable {
 	 * returns the queue in array form
 	 */
 	public List<Song> getSongList(){
-		if(songQueue == null)
-			return new ArrayList<Song>();
-		return new ArrayList<Song>(songQueue);
+		return songs;
 	}
 	//reads the song list and song queue from the save file
 	private void readInput() {
@@ -145,7 +152,6 @@ public class SongQueue implements Serializable {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}

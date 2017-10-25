@@ -23,17 +23,25 @@ public class Users {
 			if(!userFile.createNewFile())
 				readInput();
 			else {
-				userList = new ArrayList<User>();
-				userList.add(new NormalUser("Chris", "1"));
-				userList.add(new NormalUser("Devon", "22"));
-				userList.add(new NormalUser("River", "333"));
-				userList.add(new NormalUser("Ryan", "4444"));
-				userList.add(new AdminUser("Merlin", "7777777"));
+				createNewUserList();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
+		
+	}
+	
+	/** 
+	 * createNewUserList creates a new userList if the save file does not contain any saved data or if the save file does not exist
+	 */
+	private void createNewUserList() {
+		userList = new ArrayList<User>();
+		userList.add(new NormalUser("Chris", "1"));
+		userList.add(new NormalUser("Devon", "22"));
+		userList.add(new NormalUser("River", "333"));
+		userList.add(new NormalUser("Ryan", "4444"));
+		userList.add(new AdminUser("Merlin", "7777777"));
 	}
 	
 	//takes in a username and password
@@ -77,7 +85,10 @@ public class Users {
 		return true;
 	}
 
-	//reads the user array for the user save file
+	/**
+	 * readInput reads from the Users save file. If the save file is blank then we catch the IO exception when we are reading. 
+	 * If there is an IOException then we call createNewUserList 
+	 */
 	private void readInput() {
 		try {
 
@@ -89,7 +100,7 @@ public class Users {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+			createNewUserList();
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
