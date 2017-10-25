@@ -12,11 +12,20 @@ import java.util.List;
 
 //This class handles the list of Users 
 // includes any login checks and add/removal of users
-
+/**
+ * Keeps a list of all the Users
+ * 
+ * @author Derian Davila Acuna
+ *
+ */
 public class Users {	
 	private File userFile;
 	private List<User> userList;
 	
+	/**
+	 * If their is a valid save file then the list of users will be loaded from that file.
+	 * Otherwise this will create a new list of users and create a new savefile if their wasn't one.
+	 */
 	public Users() {
 		userFile = new File("saveFiles/Users.txt");
 		try {
@@ -47,6 +56,10 @@ public class Users {
 	//takes in a username and password
 	//if the username and password are valid this returns a the given User
 	//if the username or password is not valid this will return null
+	/**
+	 * checks whether or not the username matches with any user in the list then whether or not given password is correct
+	 * @return the user with the specified username
+	 */
 	public User logIn(String username, String password) {
 		for(User curUser : userList) {
 			if(curUser.getUsername().equals(username)) {
@@ -61,7 +74,9 @@ public class Users {
 		return null;
 	}
 
-	//removes the given user
+	/**
+	 * removes the user with the given username
+	 */
 	public void removeUser(String username) {
 		for(User curUser : userList) {
 			if(curUser.getUsername().equals(username)) {
@@ -71,8 +86,10 @@ public class Users {
 		}
 	}
 	
-	//adds a user to the userList
-	//returns false if there is already a user with the same username
+	/**
+	 * Adds a user to the userList with the given username and password
+	 * @return returns true if a new user was added, returns false if their exist a user with the given username
+	 */
 	public boolean addUser(String username, String password) {
 		for(User curUser : userList) {
 			if(curUser.getUsername().equals(username)) {
@@ -106,7 +123,9 @@ public class Users {
 		}
 	}
 	
-	//writes the array into the save file
+	/**
+	 * writes the list of users into the Users.txt save file
+	 */
 	public void writeToFile() {
 		try {
 			FileOutputStream output = new FileOutputStream(userFile);

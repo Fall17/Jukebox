@@ -9,7 +9,6 @@ import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -117,7 +116,14 @@ public class JukeboxStartGUI extends Application {
 		all.setRight(songQueueList);
 
 		primaryStage.setOnCloseRequest(new WritePersistentObject());
-		
+
+		//load the saved song queue if it exist
+		if(songQueue.getQueueList() != null) {
+			for(Song curSong : songQueue.getQueueList()) {
+				songQueueList.getItems().add(curSong.getName());
+			}
+			songHandlerStartUp();
+		}
 		Scene scene = new Scene(all, 800, 250);
 		primaryStage.setScene(scene);
 		primaryStage.show();
@@ -206,7 +212,7 @@ public class JukeboxStartGUI extends Application {
 	/**
 	 * Shows GUI when a normal user cannot play a song (for whatever reason)..
 	 * 
-	 * @param errorMessage is the given error message for why the user can't play the selected song
+	 * @param errorMessage the given error message for why the user can't play the selected song
 	 */
 	private void showLoggedInUserSongError(String errorMessage) {
 		// "top" GridPane holds the "Play" button and the"Song Queue" label
@@ -303,7 +309,7 @@ public class JukeboxStartGUI extends Application {
 	/**
 	 * Shows GUI when admin user cannot play a song (for whatever reason).
 	 * 
-	 * @param errorMessage is the given error message for why the user can't play the selected song
+	 * @param errorMessage the given error message for why the user can't play the selected song
 	 */
 	private void showLoggedInAdminSongError(String errorMessage) {
 		// "top" GridPane holds the "Play" button and the"Song Queue" label
@@ -388,7 +394,7 @@ public class JukeboxStartGUI extends Application {
 					// sets up jukebox if not in use
 					else {
 						Song nextSong = songQueue.peekNextSong();
-						File file = new File(nextSong.getPath());
+					File file = new File(nextSong.getPath());
 						URI uri = file.toURI();
 						jukebox = new MediaPlayer(new Media(uri.toString()));
 						jukebox.setAutoPlay(true);
@@ -539,7 +545,7 @@ public class JukeboxStartGUI extends Application {
 	/**
 	 * ask the user if they would like to save the current state of the jukebox
 	 * 
-	 * @author derian
+	 * @author Derian Davila Acuna
 	 */
 	  private class WritePersistentObject implements EventHandler<WindowEvent> {
 
@@ -548,7 +554,6 @@ public class JukeboxStartGUI extends Application {
 		      Alert alert = new Alert(AlertType.CONFIRMATION);
 		      alert.setTitle("Shut Down Option");
 		      alert.setHeaderText("Press ok to save the current jukebox session");
-		  //    alert.setContentText("Press cancel while system testing.");
 		      Optional<ButtonType> result = alert.showAndWait();
 
 		      if (result.get() == ButtonType.OK) {
@@ -557,5 +562,37 @@ public class JukeboxStartGUI extends Application {
 		      }
 		    }
 		  }
+	  
+	  /**
+	   * Handles playing any song that was loaded into the song queue from any previous save.
+	   * 
+	   * @author Derian Davila Acuna
+	   */
+		private void songHandlerStartUp(){
+			Song nextSong;
+			// tries to get next song in queue
+			// if there is no song in queue, catches exception
+			try {
+				nextSong = songQueue.peekNextSong();
+			} catch (NoSuchElementException e) {
+				nextSong = null;
+			}
+			songQueueList.getItems().remove(0);
+			// if there is no song in queue, does nothing
+			if (nextSong == null) {
+				jukeboxInUse = false;
+			}
+			// if there is song in queue, plays next song and recurses
+			else {
+				jukeboxInUse = true;
+				File file = new File(nextSong.getPath());
+				URI uri = file.toURI();
+				jukebox = new MediaPlayer(new Media(uri.toString()));
+				jukebox.setAutoPlay(true);
+				jukebox.play();
+				jukebox.setOnEndOfMedia(new EndOfSongHandler());
+			}
+			
+		}
 
 }

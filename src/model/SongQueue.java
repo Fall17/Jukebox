@@ -16,8 +16,15 @@ import java.util.Queue;
 
 import javafx.scene.control.TableColumn;
 
-//Creates a FIFO queue of songs to be played
-//checks that each song is only played at most 3 times a day
+
+/**
+ * Creates a FIFO queue of songs to be played
+ * It also checks that the song can be played that day, is played less then 3 times. 
+ * And it checks to make sure that the user can play the given song.
+ * 
+ * @author Derian Davila Acuna
+ *
+ */
 public class SongQueue implements Serializable {
 
 	private List<Song> songs;
@@ -25,6 +32,10 @@ public class SongQueue implements Serializable {
 
 	private File userFile;
 
+	/**
+	 * If their is a valid save file then it will use that save file to create a list of songs and the song queue
+	 * Otherwise it will use the default list of songs and create a new song queue
+	 */
 	public SongQueue() {
 		userFile = new File("saveFiles/SongQueue.txt");
 		//reads any possible save file if not it creates one
@@ -59,7 +70,11 @@ public class SongQueue implements Serializable {
 		songs.add(new Song("songfiles/UntameableFire.mp3", "UntameableFire", 282, "Pierre Langer"));		
 	}
 
-	//gets the SongPath for the given song name
+	/**
+	 * 
+	 * @param song the title of the song
+	 * @return the Song corresponding to the given title
+	 */
 	private Song getSong(String song) {
 		for(Song curSong : songs) {
 			if(curSong.getName().equals(song))
@@ -68,6 +83,12 @@ public class SongQueue implements Serializable {
 		return null;
 	}
 
+	/**
+	 * 
+	 * @param song the title of the song
+	 * @param user the user trying to play the song
+	 * @return The error message if the user can't play the song. Returns null if the user can.
+	 */
 	public String canPlaySong(String song, User user) {
 		Song curSong = getSong(song);
 		//if the user has hit his/her limit on either number of songs or time limit then return false
@@ -87,6 +108,12 @@ public class SongQueue implements Serializable {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param song the title of the song
+	 * @param user the user trying to play the song
+	 * @return The error message if the user can't play the song. Returns null if the user can.
+	 */
 	public String playSong(String song, User user) {
 		Song curSong = getSong(song);
 		if(canPlaySong(song, user) != null)
@@ -98,22 +125,42 @@ public class SongQueue implements Serializable {
 		return null;
 	}
 	
-	//returns the next element in the Queue and removes it from the queue
+	
+	/**
+	 * @return returns the next song in the queue and removes it from the queue
+	 */
 	public Song nextSong() {
 		return songQueue.remove();
 	}
 	
+	/**
+	 *
+	 * @return  returns the next song in the queue without removing it
+	 */
 	public Song peekNextSong() {
 		return songQueue.peek();
 	}
 
 	/**
-	 * returns the queue in array form
+	 * @return the list of songs
 	 */
 	public List<Song> getSongList(){
 		return songs;
 	}
-	//reads the song list and song queue from the save file
+	
+	/**
+	 * @return Returns the queue in an arrayList. If their is no queue then it returns null
+	 */
+	public List<Song> getQueueList(){
+		if(songQueue.size() == 0)
+			return null;
+		return new ArrayList<Song>(songQueue);
+	}
+	
+	
+	/**
+	 * //reads the song list and song queue from the save file
+	 */
 	private void readInput() {
 		try {
 
@@ -131,7 +178,9 @@ public class SongQueue implements Serializable {
 		}
 	}
 
-	//writes the song list and the save queue into the save file
+	/**
+	 * writes the song list and the save queue into the save file
+	 */
 	public void writeToFile() {
 		try {
 			FileOutputStream output = new FileOutputStream(userFile);

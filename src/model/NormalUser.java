@@ -2,7 +2,12 @@ package model;
 
 import java.io.Serializable;
 
-//A normal user with no extra privliges
+/**
+ * Normal user with no extra privileges
+ * 
+ * @author Derian Davila Acuna
+ *
+ */
 public class NormalUser extends User{
 	public NormalUser(String userName, String password) {
 		super(userName, password);
