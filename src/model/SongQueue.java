@@ -68,7 +68,7 @@ public class SongQueue implements Serializable {
 		return null;
 	}
 
-/*	public String canPlaySong(String song, User user) {
+	public String canPlaySong(String song, User user) {
 		Song curSong = getSong(song);
 		//if the user has hit his/her limit on either number of songs or time limit then return false
 		if(user.canPlaySong(curSong.getSongLength()) != null)
@@ -80,43 +80,13 @@ public class SongQueue implements Serializable {
 		else {
 			//if the song has been played 3 times today you can not play the song again
 			if(curSong.getTimesPlayed() > 2)
-				return "The song has already been played 3 times today";
+				return "Error: Song Plays > 3";
+					   
 			else 
 				return null;
 		}
 	}
-	*/
-	public boolean canPlaySong(String song, User user) {
-		Song curSong = getSong(song);
-		//if the user has hit his/her limit on either number of songs or time limit then return false
-		if(!user.canPlaySong(curSong.getSongLength()))
-			return false;
-		//if the song has not been played today
-		if(curSong.getLastPlayed().isBefore(LocalDate.now())) {
-			return true;
-		}
-		else {
-			//if the song has been played 3 times today you can not play the song again
-			if(curSong.getTimesPlayed() > 2)
-				return false;
-			else 
-				return true;
-		}
-	}
-
-	public boolean playSong(String song, User user) {
-		Song curSong = getSong(song);
-		if(!canPlaySong(song, user))
-			return canPlaySong(song,user);
-
-		songQueue.add(curSong);
-		curSong.playSong();
-		user.playSong(curSong.getSongLength());
-		return true;
-	}
-
-	/*
-	//adds the song to the queue if canPlaySong(song) is true
+	
 	public String playSong(String song, User user) {
 		Song curSong = getSong(song);
 		if(canPlaySong(song, user) != null)
@@ -127,10 +97,14 @@ public class SongQueue implements Serializable {
 		user.playSong(curSong.getSongLength());
 		return null;
 	}
-*/
+	
 	//returns the next element in the Queue and removes it from the queue
 	public Song nextSong() {
 		return songQueue.remove();
+	}
+	
+	public Song peekNextSong() {
+		return songQueue.peek();
 	}
 
 	/**

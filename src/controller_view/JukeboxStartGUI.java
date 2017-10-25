@@ -3,12 +3,18 @@ package controller_view;
 import java.io.File;
 import java.net.URI;
 import java.util.NoSuchElementException;
+import java.util.Optional;
+
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -19,6 +25,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import model.AdminUser;
 import model.Song;
 import model.SongQueue;
@@ -109,6 +116,8 @@ public class JukeboxStartGUI extends Application {
 		all.setLeft(songViewer);
 		all.setRight(songQueueList);
 
+		primaryStage.setOnCloseRequest(new WritePersistentObject());
+		
 		Scene scene = new Scene(all, 800, 250);
 		primaryStage.setScene(scene);
 		primaryStage.show();
@@ -196,8 +205,10 @@ public class JukeboxStartGUI extends Application {
 
 	/**
 	 * Shows GUI when a normal user cannot play a song (for whatever reason)..
+	 * 
+	 * @param errorMessage is the given error message for why the user can't play the selected song
 	 */
-	private void showLoggedInUserSongError() {
+	private void showLoggedInUserSongError(String errorMessage) {
 		// "top" GridPane holds the "Play" button and the"Song Queue" label
 		GridPane top = new GridPane();
 		top.setHgap(10);
@@ -214,7 +225,7 @@ public class JukeboxStartGUI extends Application {
 		GridPane center = new GridPane();
 		center.setHgap(10);
 		center.setVgap(10);
-		Label status = new Label("Error: Could not add song!");
+		Label status = new Label(errorMessage);
 		Label accountName = new Label("Account Name: " + currUserName);
 		Button logoutButton = new Button("Log out");
 		EventHandler<ActionEvent> handleLogout = new logoutHandler();
@@ -291,8 +302,10 @@ public class JukeboxStartGUI extends Application {
 
 	/**
 	 * Shows GUI when admin user cannot play a song (for whatever reason).
+	 * 
+	 * @param errorMessage is the given error message for why the user can't play the selected song
 	 */
-	private void showLoggedInAdminSongError() {
+	private void showLoggedInAdminSongError(String errorMessage) {
 		// "top" GridPane holds the "Play" button and the"Song Queue" label
 		GridPane top = new GridPane();
 		top.setHgap(10);
@@ -314,7 +327,7 @@ public class JukeboxStartGUI extends Application {
 		Label password = new Label("Password");
 		accountNameField = new TextField();
 		passwordField = new TextField();
-		Label status = new Label("Error: Could not add song!");
+		Label status = new Label(errorMessage);
 		Button addButton = new Button("Add User");
 		EventHandler<ActionEvent> handleAdd = new addHandler();
 		addButton.setOnAction(handleAdd);
@@ -365,15 +378,16 @@ public class JukeboxStartGUI extends Application {
 			else {
 				Song songToPlay = songViewer.getSelectionModel().getSelectedItem();
 				// attempts to play song
-				boolean didPlaySong = songQueue.playSong(songToPlay.getName(), currUser);
-				if (didPlaySong) {
+				//if playSong returns a null then play song is successful
+				String playSongErrorMessage = songQueue.playSong(songToPlay.getName(), currUser);
+				if (playSongErrorMessage == null) {
 					// if jukebox is in use, no further action necessary
 					if (jukeboxInUse) {
 						songQueueList.getItems().add(songToPlay.getName());
 					}
 					// sets up jukebox if not in use
 					else {
-						Song nextSong = songQueue.nextSong();
+						Song nextSong = songQueue.peekNextSong();
 						File file = new File(nextSong.getPath());
 						URI uri = file.toURI();
 						jukebox = new MediaPlayer(new Media(uri.toString()));
@@ -394,9 +408,9 @@ public class JukeboxStartGUI extends Application {
 				} else {
 					// shows that song could not be played
 					if (currUser instanceof AdminUser) {
-						showLoggedInAdminSongError();
+						showLoggedInAdminSongError(playSongErrorMessage);
 					} else {
-						showLoggedInUserSongError();
+						showLoggedInUserSongError(playSongErrorMessage);
 					}
 				}
 			}
@@ -459,7 +473,7 @@ public class JukeboxStartGUI extends Application {
 	 */
 	private class addHandler implements EventHandler<ActionEvent> {
 		@Override
-		/**
+		/**	
 		 * Handler for ActionEvent
 		 *
 		 * @param event the given ActionEvent
@@ -497,10 +511,11 @@ public class JukeboxStartGUI extends Application {
 		@Override
 		public void run() {
 			Song nextSong;
+			songQueue.nextSong();
 			// tries to get next song in queue
 			// if there is no song in queue, catches exception
 			try {
-				nextSong = songQueue.nextSong();
+				nextSong = songQueue.peekNextSong();
 			} catch (NoSuchElementException e) {
 				nextSong = null;
 			}
@@ -520,4 +535,27 @@ public class JukeboxStartGUI extends Application {
 			}
 		}
 	}
+	
+	/**
+	 * ask the user if they would like to save the current state of the jukebox
+	 * 
+	 * @author derian
+	 */
+	  private class WritePersistentObject implements EventHandler<WindowEvent> {
+
+		    @Override
+		    public void handle(WindowEvent event) {
+		      Alert alert = new Alert(AlertType.CONFIRMATION);
+		      alert.setTitle("Shut Down Option");
+		      alert.setHeaderText("Press ok to save the current jukebox session");
+		  //    alert.setContentText("Press cancel while system testing.");
+		      Optional<ButtonType> result = alert.showAndWait();
+
+		      if (result.get() == ButtonType.OK) {
+		    	  songQueue.writeToFile();
+		    	  users.writeToFile();
+		      }
+		    }
+		  }
+
 }

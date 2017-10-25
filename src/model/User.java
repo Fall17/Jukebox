@@ -53,33 +53,18 @@ public abstract class User implements Serializable{
 	 * @param time length in seconds of the given song the user wants to play
 	 * @return String of the given error message if the user can not play. Will return null if the user can play the song
 	 */
-	/*public String canPlaySong(int time) {
+	public String canPlaySong(int time) {
 		if(time > timeLeft)
-			return "User does not have any enough time left to play the song";
+			return "User does not have enough time";
 		if(lastPlayed.compareTo(LocalDate.now()) < 0) {
 			return null;
 		}
 		else {
 			//if the user has played 3 songs today you can not play a song
 			if(timesPlayed > 2)
-				return "User has already played 3 songs today";
+				return "User has played 3 songs today";
 			else 
 				return null;
-		}
-	}*/
-	
-	public boolean canPlaySong(int time) {
-		if(time > timeLeft)
-			return false;
-		if(lastPlayed.compareTo(LocalDate.now()) < 0) {
-			return true;
-		}
-		else {
-			//if the user has played 3 songs today you can not play a song
-			if(timesPlayed > 2)
-				return false;
-			else 
-				return true;
 		}
 	}
 	
