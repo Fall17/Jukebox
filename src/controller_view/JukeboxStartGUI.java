@@ -577,8 +577,6 @@ public class JukeboxStartGUI extends Application {
 			} catch (NoSuchElementException e) {
 				nextSong = null;
 			}
-			songQueueList.getItems().remove(0);
-			// if there is no song in queue, does nothing
 			if (nextSong == null) {
 				jukeboxInUse = false;
 			}
