@@ -11,6 +11,9 @@ import model.NormalUser;
 import model.User;
 import model.Users;
 
+//MOST TEST WILL NOT WORK DUE TO A CHANGE FROM A 
+//BOOLEAN RETURN VALUE -> STRING RETURN VALUE IN CANPLAYSONG
+
 public class UserTest {
 
 	@Test

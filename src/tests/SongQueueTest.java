@@ -11,6 +11,9 @@ import model.Song;
 import model.SongQueue;
 import model.User;
 
+//MOST TEST WILL NOT WORK DUE TO A CHANGE FROM
+//BOOLEAN RETURN VALUE -> STRING RETURN VALUE IN CANPLAYSONG
+
 public class SongQueueTest {
 
 
